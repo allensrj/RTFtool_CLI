@@ -29,7 +29,7 @@ rtftool <command> --help
 ---
 ## 使用步骤
 1. 去releases里下载 [rtftool_v0.3.0_windows_amd64.zip](https://github.com/allensrj/RTFtool_CLI/releases/download/v0.3.0/rtftool_v0.3.0_windows_amd64.zip) 
-2. 解压rtftool_v0.3.0_windows_amd64.zip，将其中的rtftool.exe 放置到指定位置 或 加入环境变量均可；
+2. 解压rtftool_v0.3.0_windows_amd64.zip，将其中的rtftool.exe 放置到指定位置 或 加入环境变量均可。压缩包里的optimize_pdf.exe 使用的话可以忽略，它的功能是将rtf转格式为pdf时改成展开书签 + Fast Web View样式；
 3. 如果是指定位置，就这样运行 C:\Projects\rtftool.exe --help
 
 ## 1. check — RTF 页码校验
