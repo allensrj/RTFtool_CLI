@@ -1,4 +1,4 @@
-# RTF Tools CLI v0.3 使用说明
+# RTF Tools CLI v0.4 使用说明
 
 > **前置条件：** Windows 系统，已安装 Microsoft Word。  
 > 除 `combine` 命令外，其余命令均通过 Word COM 接口操作，运行前请**关闭所有已打开的 Word 文档**。
