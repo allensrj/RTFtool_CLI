@@ -14,21 +14,22 @@ var (
 	combineDocxOutName  string
 	combineDocxInputDir string
 	combineDocxSort     bool
+	combineDocxToc      bool
 )
 
 var combineDocxCmd = &cobra.Command{
 	Use:   "combine-docx [flags] [file1 file2 ...]",
 	Short: "Merge multiple DOCX/RTF files into one DOCX (General style)",
 	Long: `Merges multiple DOCX or RTF files into a single DOCX document via Word COM.
-Does not support Table of Contents (TOC) insertion.
+Supports optional Table of Contents (TOC) insertion.
 
 Requires Microsoft Word to be installed. Close all open Word documents before running.
 
 File source (choose one):
-  1. List file paths as positional arguments (merged in the given order)
+ 1. List file paths as positional arguments (merged in the given order)
   2. Use --input-dir to scan a folder for .docx/.rtf files (auto-sorted by default)`,
 	Example: `  rtftool combine-docx -o "C:\Output" -n "Merged" "C:\docs\part1.docx" "C:\docs\part2.docx"
-  rtftool combine-docx -i "C:\docs\source" -o "C:\Output" -n "Merged"`,
+  rtftool combine-docx -i "C:\docs\source" -o "C:\Output" -n "Merged" --toc`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if combineDocxOutDir == "" {
 			return fmt.Errorf("--out-dir is required")
@@ -77,13 +78,19 @@ File source (choose one):
 			fmt.Printf("  %d. %s\n", i+1, p)
 		}
 		fmt.Printf("[INFO] Output: %s\n", filepath.Join(combineDocxOutDir, combineDocxOutName+".docx"))
+		fmt.Printf("[INFO] TOC: %v\n", combineDocxToc)
 		fmt.Println("----------------------------------------")
 
 		logCallback := func(format string, args ...interface{}) {
 			fmt.Printf(format, args...)
 		}
 
-		err := CombineDocx(filePaths, combineDocxOutDir, combineDocxOutName, logCallback)
+		generateTOC := "N"
+		if combineDocxToc {
+			generateTOC = "Y"
+		}
+
+		err := CombineDocx(filePaths, combineDocxOutDir, combineDocxOutName, generateTOC, logCallback)
 		if err != nil {
 			return fmt.Errorf("combine-docx failed: %v", err)
 		}
@@ -98,6 +105,7 @@ func init() {
 	combineDocxCmd.Flags().StringVarP(&combineDocxOutName, "out-name", "n", "", "Output file name without extension (required)")
 	combineDocxCmd.Flags().StringVarP(&combineDocxInputDir, "input-dir", "i", "", "Scan files from this directory")
 	combineDocxCmd.Flags().BoolVarP(&combineDocxSort, "sort", "s", true, "Auto-sort files by T/F/L prefix and numbers")
+	combineDocxCmd.Flags().BoolVarP(&combineDocxToc, "toc", "t", false, "Insert TOC at document head")
 
 	_ = combineDocxCmd.MarkFlagRequired("out-dir")
 	_ = combineDocxCmd.MarkFlagRequired("out-name")

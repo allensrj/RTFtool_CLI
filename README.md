@@ -15,7 +15,7 @@ rtftool <command> [flags]
 |------|------|
 | `check` | RTF 页码校验 |
 | `combine` | RTF 合并（Specify 样式，支持 TOC 和页码刷新） |
-| `combine-docx` | DOCX/RTF 通用合并（General 样式） |
+| `combine-docx` | DOCX/RTF 通用合并（General 样式，支持可选 TOC） |
 | `convert` | RTF → PDF / DOCX 转换 |
 | `docx2rtf` | DOCX → RTF 转换（支持单文件和批量） |
 
@@ -28,8 +28,8 @@ rtftool <command> --help
 
 ---
 ## 使用步骤
-1. 去releases里下载 [rtftool_v0.3.0_windows_amd64.zip](https://github.com/allensrj/RTFtool_CLI/releases/download/v0.3.0/rtftool_v0.3.0_windows_amd64.zip) 
-2. 解压rtftool_v0.3.0_windows_amd64.zip，将其中的rtftool.exe 放置到指定位置 或 加入环境变量均可。压缩包里的optimize_pdf.exe 使用的话可以忽略，它的功能是将rtf转格式为pdf时改成展开书签 + Fast Web View样式；
+1. 去 releases 里下载 [rtftool_v0.4.0_windows_amd64.zip](https://github.com/allensrj/RTFtool_CLI/releases/download/v0.4.0/rtftool_v0.4.0_windows_amd64.zip)
+2. 解压 rtftool_v0.4.0_windows_amd64.zip，将其中的 rtftool.exe 放置到指定位置或加入环境变量均可。PDF 优化器已内嵌于 rtftool.exe；
 3. 如果是指定位置，就这样运行 C:\Projects\rtftool.exe --help
 
 ## 1. check — RTF 页码校验
@@ -138,7 +138,7 @@ rtftool combine -i "C:\RTF\source" -o "C:\Output" -n "Report" -t --toc-rows 30
 
 ## 3. combine-docx — DOCX/RTF 通用合并（General 样式）
 
-通过 Word COM 将多个 DOCX 或 RTF 文件按顺序合并为一个 DOCX 文件。**不支持**目录（TOC）插入。
+通过 Word COM 将多个 DOCX 或 RTF 文件按顺序合并为一个 DOCX 文件。支持可选目录（TOC）插入。
 
 ### 参数
 
@@ -148,6 +148,7 @@ rtftool combine -i "C:\RTF\source" -o "C:\Output" -n "Report" -t --toc-rows 30
 | `--out-name` | `-n` | string | 是 | — | 输出文件名（不含扩展名） |
 | `--input-dir` | `-i` | string | 否 | — | 从指定文件夹扫描 `.docx` 和 `.rtf` 文件 |
 | `--sort` | `-s` | bool | 否 | true | 是否按 T/F/L 前缀和数字自动排序 |
+| `--toc` | `-t` | bool | 否 | false | 在输出 DOCX 开头插入目录 |
 
 ### 文件来源
 
@@ -164,6 +165,9 @@ rtftool combine-docx -o "C:\Output" -n "Merged_Report" ^
 
 # 扫描文件夹自动排序
 rtftool combine-docx -i "C:\docs\source" -o "C:\Output" -n "Merged_Report"
+
+# 扫描文件夹自动排序，并插入目录
+rtftool combine-docx -i "C:\docs\source" -o "C:\Output" -n "Merged_Report" --toc
 
 # 扫描文件夹，不排序
 rtftool combine-docx -i "C:\docs\source" -o "C:\Output" -n "Merged_Report" --sort=false
